@@ -16,9 +16,6 @@ class Baked(models.Model):
     date_baked = models.DateField(auto_now=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
 
-# class Store(models.Model):
-#     updated_at = models.DateTimeField(auto_now_add=True)
-    
 class StoreCookie(models.Model):
     quantity = models.IntegerField()
     cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT, related_name='CookieInStore')
