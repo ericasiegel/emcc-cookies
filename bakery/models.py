@@ -3,12 +3,21 @@ from django.db import models
 # Create your models here.
 class Cookie(models.Model):
     name = models.CharField(max_length=255)
+    
+    class Meta:
+        ordering = ['name']
+        
+        
 
 class Dough(models.Model):
-    frozen_ct = models.IntegerField()
+    quantity = models.IntegerField()
     location = models.CharField(max_length=255)
     date_frozen = models.DateField(auto_now=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ['cookie']
+        verbose_name = 'Cookie Dough'
     
 class Baked(models.Model):
     PACKAGED = 'P'
@@ -25,14 +34,19 @@ class Baked(models.Model):
     date_baked = models.DateField(auto_now=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     
-# class Store(models.Model):
-#     last_updated = models.DateField(auto_now=False)
+    class Meta:
+        ordering = ['cookie']
+        verbose_name = 'Baked Cookie'
+    
 
 class StoreCookie(models.Model):
     quantity = models.IntegerField()
-    cookie = models.OneToOneField(Cookie, on_delete=models.CASCADE, related_name='CookieInStore')
+    cookie = models.OneToOneField(Cookie, on_delete=models.CASCADE)
     last_updated = models.DateField(auto_now=True)
-    # store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ['cookie']
+        verbose_name = 'Cookies In Store'
     
     
 
