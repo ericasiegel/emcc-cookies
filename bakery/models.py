@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 class Cookie(models.Model):
     name = models.CharField(max_length=255)
+    baked_cookie_par = models.IntegerField(null=True)
+    dough_par = models.IntegerField(null=True)
     
     class Meta:
         ordering = ['name']
@@ -41,6 +43,7 @@ class Baked(models.Model):
 
 class StoreCookie(models.Model):
     quantity = models.IntegerField()
+    par = models.IntegerField(null=True)
     cookie = models.OneToOneField(Cookie, on_delete=models.CASCADE)
     last_updated = models.DateField(auto_now=True)
     

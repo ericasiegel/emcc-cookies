@@ -1,12 +1,14 @@
 from django.contrib import admin
-from django.db.models import Count, Sum, F
+from django.db.models import Sum, F
+from django.urls import reverse
+from django.utils.html import format_html, urlencode
 from . import models
 
 
 
 @admin.register(models.Cookie)
 class CookieAdmin(admin.ModelAdmin):
-    list_display = ['name', 'baked_quantity', 'dough_quantity', 'store_quantity']
+    list_display = ['name', 'baked_cookie_par', 'baked_quantity', 'dough_par', 'dough_quantity', 'store_quantity']
     title = 'Cookie Name'
     
     def baked_quantity(self, cookie):
@@ -25,8 +27,6 @@ class CookieAdmin(admin.ModelAdmin):
             store_quantity = F('storecookie__quantity')
         )
 
-        
-        
 
 @admin.register(models.Baked)
 class BakedAdmin(admin.ModelAdmin):
@@ -46,7 +46,7 @@ class DoughAdmin(admin.ModelAdmin):
 
 @admin.register(models.StoreCookie)
 class StoreCookieAdmin(admin.ModelAdmin):
-    list_display = ['cookie_name', 'quantity', 'last_updated']
+    list_display = ['cookie_name', 'par', 'quantity', 'last_updated']
     list_select_related = ['cookie']
     
     def cookie_name(self, baked):
