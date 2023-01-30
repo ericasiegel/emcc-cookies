@@ -9,6 +9,9 @@ class Cookie(models.Model):
     class Meta:
         ordering = ['name']
         
+    def __str__(self) -> str:
+        return self.name
+        
         
 
 class Dough(models.Model):

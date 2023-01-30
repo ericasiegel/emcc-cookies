@@ -12,10 +12,27 @@ class CookieAdmin(admin.ModelAdmin):
     title = 'Cookie Name'
     
     def baked_quantity(self, cookie):
-        return cookie.baked_quantity
+        url = (
+            reverse('admin:bakery_baked_changelist')
+            + '?'
+            + urlencode({
+                'cookie__id':str(cookie.id)
+            })
+        )
+        return format_html('<a href="{}">{}</a>', url, cookie.baked_quantity)
+    
+    # def baked_quantity(self, cookie):
+    #     return cookie.baked_quantity
     
     def dough_quantity(self, cookie):
-        return cookie.dough_quantity
+        url = (
+            reverse('admin:bakery_dough_changelist')
+            + '?'
+            + urlencode({
+                'cookie__id':str(cookie.id)
+            })
+        )
+        return format_html('<a href="{}">{}</a>', url, cookie.dough_quantity)
     
     def store_quantity(self, cookie):
         return cookie.store_quantity
