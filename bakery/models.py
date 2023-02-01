@@ -1,13 +1,12 @@
 from django.db import models
 
-
+# Storage Location
 TOP_FREEZER = 'T'
 BOTTOM_FREEZER = 'B'
 REFRIGERATOR = 'R'
 STORAGE_FREEZER = 'SF'
 STORAGE_REFRIGERATOR = 'SR'
 
-    
 LOCATION_CHOICES = [
     (TOP_FREEZER, 'Top Freezer'),
     (BOTTOM_FREEZER, 'Bottom Freezer'),
@@ -16,6 +15,7 @@ LOCATION_CHOICES = [
     (STORAGE_REFRIGERATOR, 'Storage Refrigerator')
 ]
 
+# Baked Choices
 PACKAGED = 'P'
 FROZEN = 'F'
     
@@ -24,6 +24,7 @@ BAKED_CHOICES = [
     (FROZEN, 'Frozen')
 ]
 
+# Cookie Size
 MEGA = 'L'
 MINI = 'S'
         
@@ -36,7 +37,7 @@ TYPE_CHOICES = [
 class Cookie(models.Model):
     name = models.CharField(max_length=255)
     dough_par = models.IntegerField(null=True)
-    baked_cookie_par = models.IntegerField(null=True)
+    mega_cookie_par = models.IntegerField(null=True)
     mini_cookie_par = models.IntegerField(null=True)
     
     
@@ -70,16 +71,6 @@ class Baked(models.Model):
         ordering = ['cookie']
         verbose_name = 'Baked Cookie'
 
-# class Mini(models.Model):
-#     quantity = models.IntegerField()
-#     status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
-#     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
-#     date_baked = models.DateField(auto_now=True)
-#     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
-    
-#     class Meta:
-#         ordering = ['cookie']
-#         verbose_name = 'Mini Cookie'
 
 class StoreCookie(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
