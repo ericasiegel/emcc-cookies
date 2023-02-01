@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bakery.apps.BakeryConfig",
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
