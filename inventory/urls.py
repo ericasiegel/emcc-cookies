@@ -24,5 +24,5 @@ admin.site.index_title = 'Cookie Inventory'
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('bakery/', include('bakery.urls'))
+    path('bakery/', include('bakery.urls')),
 ]
