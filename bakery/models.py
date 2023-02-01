@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 # Storage Location
 TOP_FREEZER = 'T'
@@ -59,6 +60,9 @@ class Dough(models.Model):
         ordering = ['cookie']
         verbose_name = 'Cookie Dough'
     
+    def __str__(self) -> str:
+        return self.cookie.name
+    
 class Baked(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
     quantity = models.IntegerField()
@@ -70,6 +74,9 @@ class Baked(models.Model):
     class Meta:
         ordering = ['cookie']
         verbose_name = 'Baked Cookie'
+        
+    def __str__(self) -> str:
+        return self.cookie.name
 
 
 class StoreCookie(models.Model):
@@ -82,6 +89,9 @@ class StoreCookie(models.Model):
     class Meta:
         ordering = ['cookie']
         verbose_name = 'Cookies In Store'
+        
+    def __str__(self) -> str:
+        return self.cookie.name
     
     
 

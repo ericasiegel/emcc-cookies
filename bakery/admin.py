@@ -11,6 +11,7 @@ class CookieAdmin(admin.ModelAdmin):
     list_display = ['name', 'dough_par', 'dough_quantity', 'mega_cookie_par', 'mega_quantity', 'mini_cookie_par', 'mini_quantity', 'mega_in_store', 'mini_in_store']
     title = 'Cookie Name'
     search_fields = ['name__icontains']
+    list_editable = ['dough_par', 'mega_cookie_par', 'mini_cookie_par']
     
     def mega_quantity(self, cookie):
         url = (
@@ -111,6 +112,7 @@ class BakedAdmin(admin.ModelAdmin):
     list_select_related = ['cookie']
     search_fields = ['cookie_name__icontains', 'size__icontains', 'location__icontains', 'status__icontains']
     list_filter = ['size','status', 'location', 'date_baked']
+    list_editable = []
     
     def cookie_name(self, baked):
         return baked.cookie.name
@@ -133,6 +135,7 @@ class StoreCookieAdmin(admin.ModelAdmin):
     list_select_related = ['cookie']
     search_fields = ['cookie__name__icontains', 'size__icontains']
     list_filter = ['size']
+    list_editable = ['par', 'quantity']
     
     def cookie_name(self, baked):
         return baked.cookie.name
