@@ -24,11 +24,21 @@ BAKED_CHOICES = [
     (FROZEN, 'Frozen')
 ]
 
+MEGA = 'L'
+MINI = 'S'
+        
+TYPE_CHOICES = [
+    (MEGA, 'Mega'),
+    (MINI, 'Mini')
+]
+
 # Create your models here.
 class Cookie(models.Model):
     name = models.CharField(max_length=255)
-    baked_cookie_par = models.IntegerField(null=True)
     dough_par = models.IntegerField(null=True)
+    baked_cookie_par = models.IntegerField(null=True)
+    mini_cookie_par = models.IntegerField(null=True)
+    
     
     class Meta:
         ordering = ['name']
@@ -49,6 +59,7 @@ class Dough(models.Model):
         verbose_name = 'Cookie Dough'
     
 class Baked(models.Model):
+    size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
     quantity = models.IntegerField()
     status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
@@ -59,21 +70,22 @@ class Baked(models.Model):
         ordering = ['cookie']
         verbose_name = 'Baked Cookie'
 
-class Mini(models.Model):
-    quantity = models.IntegerField()
-    status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
-    location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
-    date_baked = models.DateField(auto_now=True)
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+# class Mini(models.Model):
+#     quantity = models.IntegerField()
+#     status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
+#     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
+#     date_baked = models.DateField(auto_now=True)
+#     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     
-    class Meta:
-        ordering = ['cookie']
-        verbose_name = 'Mini Cookie'
+#     class Meta:
+#         ordering = ['cookie']
+#         verbose_name = 'Mini Cookie'
 
 class StoreCookie(models.Model):
+    size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
     quantity = models.IntegerField()
     par = models.IntegerField(null=True)
-    cookie = models.OneToOneField(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     last_updated = models.DateField(auto_now=True)
     
     class Meta:
