@@ -41,12 +41,13 @@ class Cookie(models.Model):
     mega_cookie_par = models.IntegerField(null=True)
     mini_cookie_par = models.IntegerField(null=True)
     
+    def __str__(self) -> str:
+        return self.name
     
     class Meta:
         ordering = ['name']
         
-    def __str__(self) -> str:
-        return self.name
+    
         
         
 
@@ -54,7 +55,7 @@ class Dough(models.Model):
     quantity = models.IntegerField()
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
     date_frozen = models.DateField(auto_now=True)
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
     
     class Meta:
         ordering = ['cookie']
@@ -69,7 +70,7 @@ class Baked(models.Model):
     status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
     date_baked = models.DateField(auto_now=True)
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
     
     class Meta:
         ordering = ['cookie']
@@ -83,7 +84,7 @@ class StoreCookie(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
     quantity = models.IntegerField()
     par = models.IntegerField(null=True)
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
     last_updated = models.DateField(auto_now=True)
     
     class Meta:
