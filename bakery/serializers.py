@@ -55,14 +55,14 @@ class CookieSerializer(serializers.ModelSerializer):
 class BakedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Baked
-        fields = ['id', 'cookie_name', 'quantity', 'size', 'location']
+        fields = ['id', 'cookie_name', 'quantity', 'size', 'status', 'location', 'date_baked']
         
     cookie_name = serializers.StringRelatedField(read_only=True, source='cookie')
 
 class DoughSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dough
-        fields = ['id', 'cookie_name', 'quantity', 'location']
+        fields = ['id', 'cookie_name', 'quantity', 'location', 'date_frozen']
         
     cookie_name = serializers.StringRelatedField(read_only=True, source='cookie')
     
