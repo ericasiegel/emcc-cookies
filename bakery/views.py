@@ -5,21 +5,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
 
 from .models import *
 from .serializers import *
 
 # Create your views here.
-class CookieList(APIView):
-    def get(self, request):
-        queryset = Cookie.objects.all()
-        serializer = CookieSerializer(queryset, many=True)
-        return Response(serializer.data)
-    def post(self,request):
-        serializer = CookieSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class CookieList(ListCreateAPIView):
+    queryset = Cookie.objects.all()
+    serializer_class = CookieSerializer
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
 
 class CookieDetail(APIView):
     def get(self, request, id):
@@ -42,16 +40,12 @@ class CookieDetail(APIView):
         cookie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class BakedList(APIView):
-    def get(self, request):
-        queryset = Baked.objects.select_related('cookie').all()
-        serializer = BakedSerializer(queryset, many=True)
-        return Response(serializer.data)
-    def post(self, request):
-        serializer = BakedSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class BakedList(ListCreateAPIView):
+    queryset = Baked.objects.select_related('cookie').all()
+    serializer_class = BakedSerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
     
 
 class BakedDetail(APIView):
@@ -70,17 +64,12 @@ class BakedDetail(APIView):
         baked.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         
-
-class DoughList(APIView):
-    def get(self, request):
-        queryset = Dough.objects.select_related('cookie').all()
-        serializer = DoughSerializer(queryset, many=True)
-        return Response(serializer.data)
-    def post(self, request):
-        serializer = DoughSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class DoughList(ListCreateAPIView):
+    queryset = Dough.objects.select_related('cookie').all()
+    serializer_class = DoughSerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
 
 
 class DoughDetail(APIView):
@@ -100,16 +89,12 @@ class DoughDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
         
 
-class StoreCookieList(APIView):
-    def get(self, request):
-        queryset = StoreCookie.objects.select_related('cookie').all()
-        serializer = StoreCookieSerializer(queryset, many=True)
-        return Response(serializer.data)
-    def post(self, request):
-        serializer = StoreCookieSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class StoreCookieList(ListCreateAPIView):
+    queryset = StoreCookie.objects.select_related('cookie').all()
+    serializer_class = StoreCookieSerializer
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
     
 
 class StoreCookieDetail(APIView):

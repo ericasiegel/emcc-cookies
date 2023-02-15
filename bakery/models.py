@@ -90,6 +90,7 @@ class StoreCookie(models.Model):
     class Meta:
         ordering = ['cookie']
         verbose_name = 'Cookies In Store'
+        unique_together = ('size', 'cookie')
         
     def __str__(self) -> str:
         return self.cookie.name
