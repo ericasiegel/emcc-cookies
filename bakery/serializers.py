@@ -69,6 +69,6 @@ class DoughSerializer(serializers.ModelSerializer):
 class StoreCookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreCookie
-        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'size', ]
+        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'size', 'last_updated']
         
     cookie_name = serializers.StringRelatedField(read_only=True, source='cookie')
