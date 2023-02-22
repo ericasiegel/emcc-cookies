@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import *
 from .serializers import *
+
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
@@ -35,6 +37,8 @@ class CookieViewSet(ModelViewSet):
 class BakedViewSet(ModelViewSet):
     queryset = Baked.objects.select_related('cookie').all()
     serializer_class = BakedSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['cookie_id', 'size', 'location']
     
     def get_serializer_context(self):
         return {'request': self.request}
@@ -42,6 +46,8 @@ class BakedViewSet(ModelViewSet):
 class DoughViewSet(ModelViewSet):
     queryset = Dough.objects.select_related('cookie').all()
     serializer_class = DoughSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['cookie_id', 'location']
     
     def get_serializer_context(self):
         return {'request': self.request}
@@ -49,6 +55,8 @@ class DoughViewSet(ModelViewSet):
 class StoreViewSet(ModelViewSet):
     queryset = StoreCookie.objects.select_related('cookie').all()
     serializer_class = StoreCookieSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['cookie_id', 'size']
     
     def get_serializer_context(self):
         return {'request': self.request}
