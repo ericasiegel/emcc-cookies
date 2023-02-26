@@ -35,6 +35,12 @@ TYPE_CHOICES = [
 ]
 
 # Create your models here.
+class Employee(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+
+
 class Cookie(models.Model):
     name = models.CharField(max_length=255)
     dough_par = models.IntegerField(null=True)
