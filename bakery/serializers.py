@@ -53,37 +53,6 @@ class CookieSerializer(serializers.ModelSerializer):
                 'total_in_store':{'mega': store_mega_quantity, 'mini': store_mini_quantity}
                 }
     
-    # def calculate_dough(self, cookie:Cookie):
-    #     dough_queryset = Dough.objects.filter(cookie=cookie)
-    #     quantity = 0
-    #     for dough in dough_queryset:
-    #         quantity += dough.quantity
-    #     return quantity
-    
-    # def calculate_baked(self, cookie:Cookie):
-    #     baked_queryset = Baked.objects.filter(cookie=cookie)
-    #     mini_quantity = 0
-    #     mega_quantity = 0
-
-    #     for baked in baked_queryset:
-    #         if baked.size == 'L':
-    #             mega_quantity += baked.quantity
-    #         elif baked.size == 'S':
-    #             mini_quantity += baked.quantity
-    #     return {'mega': mega_quantity, 'mini': mini_quantity}
-    
-    # def calculate_storecookie(self, cookie:Cookie):
-    #     storecookie_queryset = StoreCookie.objects.filter(cookie=cookie)
-    #     mini_quantity = 0
-    #     mega_quantity = 0
-
-    #     for scookie in storecookie_queryset:
-    #         if scookie.size == 'L':
-    #             mega_quantity += scookie.quantity
-    #         elif scookie.size == 'S':
-    #             mini_quantity += scookie.quantity
-    #     return {'mega': mega_quantity, 'mini': mini_quantity}
-    
 
 class CookieNameSerializer(serializers.ModelSerializer):
     class Meta:
