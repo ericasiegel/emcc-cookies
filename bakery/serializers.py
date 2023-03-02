@@ -1,5 +1,16 @@
 from rest_framework import serializers
-from bakery.models import Cookie, Baked, Dough, StoreCookie
+from bakery.models import *
+
+
+class DisplayChoiceField(serializers.ChoiceField):
+    def __init__(self, choices, **kwargs):
+        super().__init__(choices, **kwargs)
+        self.choice_strings_to_values = {
+            key: key for key, value in self.choices.items()
+        }
+
+    def to_representation(self, value):
+        return self.choices.get(value, value)
 
 class CookieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,25 +61,59 @@ class CookieSerializer(serializers.ModelSerializer):
             if mini.size == 'S':
                 quantity += mini.quantity
         return quantity
-    
+
+class CookieNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cookie
+        fields = ['id', 'name']
 
 class BakedSerializer(serializers.ModelSerializer):
+    cookie = CookieNameSerializer(read_only=True)
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    
+    size = DisplayChoiceField(choices=TYPE_CHOICES, source='get_size_display')
+    status = DisplayChoiceField(choices=BAKED_CHOICES, source='get_status_display')
+    location = DisplayChoiceField(choices=LOCATION_CHOICES, source='get_location_display')
+
+    
     class Meta:
         model = Baked
-        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'size', 'status', 'location', 'date_baked']
-        
-    cookie_name = serializers.StringRelatedField(read_only=True, source='cookie')
+        fields = ['id', 'cookie','cookie_id', 'quantity', 'size', 'status', 'location', 'date_baked']
+    
+    def create(self, validated_data):
+        # Remove non-writable fields from validated_data
+        validated_data.pop('get_size_display', None)
+        validated_data.pop('get_status_display', None)
+        validated_data.pop('get_location_display', None)
+
+        # Call super method to create the Baked object
+        return super().create(validated_data)
+
 
 class DoughSerializer(serializers.ModelSerializer):
+    cookie = CookieNameSerializer(read_only=True)
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    
+    location = DisplayChoiceField(choices=LOCATION_CHOICES, source='get_location_display') 
+    
     class Meta:
         model = Dough
-        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'location', 'date_frozen']
+        fields = ['id', 'cookie', 'cookie_id', 'quantity', 'location', 'date_frozen']
         
-    cookie_name = serializers.StringRelatedField(read_only=True, source='cookie')
+    def create(self, validated_data):
+        # Remove non-writable fields from validated_data
+        validated_data.pop('get_location_display', None)
+
+        # Call super method to create the Dough object
+        return super().create(validated_data)
+        
     
 class StoreCookieSerializer(serializers.ModelSerializer):
+    cookie = CookieNameSerializer(read_only=True)
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    
     class Meta:
         model = StoreCookie
-        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'size', ]
+        fields = ['id', 'cookie', 'cookie_id', 'quantity', 'size']
         
-    cookie_name = serializers.StringRelatedField(read_only=True, source='cookie')
+

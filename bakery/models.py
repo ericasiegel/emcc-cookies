@@ -54,8 +54,6 @@ class Cookie(models.Model):
         ordering = ['name']
         
     
-        
-        
 
 class Dough(models.Model):
     quantity = models.IntegerField()
@@ -91,7 +89,7 @@ class StoreCookie(models.Model):
     class Meta:
         ordering = ['cookie']
         verbose_name = 'Cookies In Store'
-        unique_together = ('size', 'cookie')
+        unique_together = [['size', 'cookie']]
         
     
     
