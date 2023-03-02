@@ -1,3 +1,4 @@
+from django.db.models import *
 from rest_framework import serializers
 from bakery.models import *
 
@@ -12,32 +13,15 @@ class DisplayChoiceField(serializers.ChoiceField):
     def to_representation(self, value):
         return self.choices.get(value, value)
 
+
 class CookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'mega_baked', 'mini_baked', 'dough_made', 'mega_total_in_store', 'mini_total_in_store']
+        fields = ['id', 'name', 'dough_made', 'baked', 'total_in_store']
         
-    mega_baked = serializers.SerializerMethodField(method_name='calculate_mega_baked')
-    mini_baked = serializers.SerializerMethodField(method_name='calculate_mini_baked')
+    baked = serializers.SerializerMethodField(method_name='calculate_baked')
     dough_made = serializers.SerializerMethodField(method_name='calculate_dough')
-    mega_total_in_store = serializers.SerializerMethodField(method_name='calculate_store_mega')
-    mini_total_in_store = serializers.SerializerMethodField(method_name='calculate_store_mini')
-    
-    def calculate_mega_baked(self, cookie:Cookie):
-        baked_queryset = Baked.objects.filter(cookie=cookie)
-        quantity = 0
-        for baked in baked_queryset:
-            if baked.size == 'L':
-                quantity += baked.quantity
-        return quantity
-    
-    def calculate_mini_baked(self, cookie:Cookie):
-        baked_queryset = Baked.objects.filter(cookie=cookie)
-        quantity = 0
-        for baked in baked_queryset:
-            if baked.size == 'S':
-                quantity += baked.quantity
-        return quantity
+    total_in_store = serializers.SerializerMethodField(method_name='calculate_storecookie')
     
     def calculate_dough(self, cookie:Cookie):
         dough_queryset = Dough.objects.filter(cookie=cookie)
@@ -46,26 +30,36 @@ class CookieSerializer(serializers.ModelSerializer):
             quantity += dough.quantity
         return quantity
     
-    def calculate_store_mega(self, cookie:Cookie):
-        store_queryset = StoreCookie.objects.filter(cookie=cookie)
-        quantity = 0
-        for mega in store_queryset:
-            if mega.size == 'L':
-                quantity += mega.quantity
-        return quantity
+    def calculate_baked(self, cookie:Cookie):
+        baked_queryset = Baked.objects.filter(cookie=cookie)
+        mini_quantity = 0
+        mega_quantity = 0
+
+        for baked in baked_queryset:
+            if baked.size == 'L':
+                mega_quantity += baked.quantity
+            elif baked.size == 'S':
+                mini_quantity += baked.quantity
+        return {'mega': mega_quantity, 'mini': mini_quantity}
     
-    def calculate_store_mini(self, cookie:Cookie):
-        store_queryset = StoreCookie.objects.filter(cookie=cookie)
-        quantity = 0
-        for mini in store_queryset:
-            if mini.size == 'S':
-                quantity += mini.quantity
-        return quantity
+    def calculate_storecookie(self, cookie:Cookie):
+        storecookie_queryset = StoreCookie.objects.filter(cookie=cookie)
+        mini_quantity = 0
+        mega_quantity = 0
+
+        for scookie in storecookie_queryset:
+            if scookie.size == 'L':
+                mega_quantity += scookie.quantity
+            elif scookie.size == 'S':
+                mini_quantity += scookie.quantity
+        return {'mega': mega_quantity, 'mini': mini_quantity}
+    
 
 class CookieNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cookie
         fields = ['id', 'name']
+        
 
 class BakedSerializer(serializers.ModelSerializer):
     cookie = CookieNameSerializer(read_only=True)
