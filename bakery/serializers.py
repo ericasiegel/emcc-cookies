@@ -17,42 +17,72 @@ class DisplayChoiceField(serializers.ChoiceField):
 class CookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'dough', 'baked', 'total_in_store']
+        fields = ['id', 'name', 'counts']
         
-    baked = serializers.SerializerMethodField(method_name='calculate_baked')
-    dough = serializers.SerializerMethodField(method_name='calculate_dough')
-    total_in_store = serializers.SerializerMethodField(method_name='calculate_storecookie')
+    counts = serializers.SerializerMethodField(method_name='calculate_totals')
     
-    def calculate_dough(self, cookie:Cookie):
-        dough_queryset = Dough.objects.filter(cookie=cookie)
-        quantity = 0
-        for dough in dough_queryset:
-            quantity += dough.quantity
-        return quantity
-    
-    def calculate_baked(self, cookie:Cookie):
+    def calculate_totals(self, cookie:Cookie):
         baked_queryset = Baked.objects.filter(cookie=cookie)
-        mini_quantity = 0
-        mega_quantity = 0
+        dough_queryset = Dough.objects.filter(cookie=cookie)
+        storecookie_queryset = StoreCookie.objects.filter(cookie=cookie)
+        
+        dough_total = 0
+        baked_mini_quantity = 0
+        baked_mega_quantity = 0
+        store_mini_quantity = 0
+        store_mega_quantity = 0
+        
+        for doughs in dough_queryset:
+            dough_total += doughs.quantity
 
         for baked in baked_queryset:
             if baked.size == 'L':
-                mega_quantity += baked.quantity
+                baked_mega_quantity += baked.quantity
             elif baked.size == 'S':
-                mini_quantity += baked.quantity
-        return {'mega': mega_quantity, 'mini': mini_quantity}
+                baked_mini_quantity += baked.quantity
+                
+        for store in storecookie_queryset:
+            if store.size == 'L':
+                store_mega_quantity += store.quantity
+            elif store.size == 'S':
+                store_mini_quantity += store.quantity       
+        
+        return {
+                'doughs': dough_total, 
+                'baked_cookies':{'mega': baked_mega_quantity, 'mini': baked_mini_quantity}, 
+                'total_in_store':{'mega': store_mega_quantity, 'mini': store_mini_quantity}
+                }
     
-    def calculate_storecookie(self, cookie:Cookie):
-        storecookie_queryset = StoreCookie.objects.filter(cookie=cookie)
-        mini_quantity = 0
-        mega_quantity = 0
+    # def calculate_dough(self, cookie:Cookie):
+    #     dough_queryset = Dough.objects.filter(cookie=cookie)
+    #     quantity = 0
+    #     for dough in dough_queryset:
+    #         quantity += dough.quantity
+    #     return quantity
+    
+    # def calculate_baked(self, cookie:Cookie):
+    #     baked_queryset = Baked.objects.filter(cookie=cookie)
+    #     mini_quantity = 0
+    #     mega_quantity = 0
 
-        for scookie in storecookie_queryset:
-            if scookie.size == 'L':
-                mega_quantity += scookie.quantity
-            elif scookie.size == 'S':
-                mini_quantity += scookie.quantity
-        return {'mega': mega_quantity, 'mini': mini_quantity}
+    #     for baked in baked_queryset:
+    #         if baked.size == 'L':
+    #             mega_quantity += baked.quantity
+    #         elif baked.size == 'S':
+    #             mini_quantity += baked.quantity
+    #     return {'mega': mega_quantity, 'mini': mini_quantity}
+    
+    # def calculate_storecookie(self, cookie:Cookie):
+    #     storecookie_queryset = StoreCookie.objects.filter(cookie=cookie)
+    #     mini_quantity = 0
+    #     mega_quantity = 0
+
+    #     for scookie in storecookie_queryset:
+    #         if scookie.size == 'L':
+    #             mega_quantity += scookie.quantity
+    #         elif scookie.size == 'S':
+    #             mini_quantity += scookie.quantity
+    #     return {'mega': mega_quantity, 'mini': mini_quantity}
     
 
 class CookieNameSerializer(serializers.ModelSerializer):
