@@ -17,10 +17,10 @@ class DisplayChoiceField(serializers.ChoiceField):
 class CookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'dough_made', 'baked', 'total_in_store']
+        fields = ['id', 'name', 'dough', 'baked', 'total_in_store']
         
     baked = serializers.SerializerMethodField(method_name='calculate_baked')
-    dough_made = serializers.SerializerMethodField(method_name='calculate_dough')
+    dough = serializers.SerializerMethodField(method_name='calculate_dough')
     total_in_store = serializers.SerializerMethodField(method_name='calculate_storecookie')
     
     def calculate_dough(self, cookie:Cookie):
