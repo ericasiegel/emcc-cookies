@@ -43,9 +43,9 @@ class Employee(models.Model):
 
 class Cookie(models.Model):
     name = models.CharField(max_length=255)
-    dough_par = models.IntegerField(null=True)
-    mega_cookie_par = models.IntegerField(null=True)
-    mini_cookie_par = models.IntegerField(null=True)
+    dough_par = models.PositiveSmallIntegerField(null=True)
+    mega_cookie_par = models.PositiveSmallIntegerField(null=True)
+    mini_cookie_par = models.PositiveSmallIntegerField(null=True)
     
     def __str__(self) -> str:
         return self.name
@@ -56,7 +56,7 @@ class Cookie(models.Model):
     
 
 class Dough(models.Model):
-    quantity = models.IntegerField()
+    quantity = models.PositiveSmallIntegerField()
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
     date_frozen = models.DateField(auto_now=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
@@ -68,7 +68,7 @@ class Dough(models.Model):
     
 class Baked(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
-    quantity = models.IntegerField()
+    quantity = models.PositiveSmallIntegerField()
     status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
     date_baked = models.DateField(auto_now=True)
@@ -81,8 +81,8 @@ class Baked(models.Model):
 
 class StoreCookie(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
-    quantity = models.IntegerField()
-    par = models.IntegerField(null=True)
+    quantity = models.PositiveSmallIntegerField()
+    par = models.PositiveSmallIntegerField(null=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
     last_updated = models.DateField(auto_now=True)
     
