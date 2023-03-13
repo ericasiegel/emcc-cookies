@@ -56,7 +56,9 @@ class Cookie(models.Model):
     
 
 class Dough(models.Model):
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)]
+    )
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
     date_frozen = models.DateField(auto_now=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
@@ -68,7 +70,9 @@ class Dough(models.Model):
     
 class Baked(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)]
+    )
     status = models.CharField(max_length=1, choices=BAKED_CHOICES, default=FROZEN)
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES, default=TOP_FREEZER)
     date_baked = models.DateField(auto_now=True)
@@ -81,7 +85,9 @@ class Baked(models.Model):
 
 class StoreCookie(models.Model):
     size = models.CharField(max_length=1, choices=TYPE_CHOICES, default=MEGA)
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)]
+    )
     par = models.PositiveSmallIntegerField(null=True)
     cookie = models.ForeignKey(Cookie, on_delete=models.PROTECT)
     last_updated = models.DateField(auto_now=True)
